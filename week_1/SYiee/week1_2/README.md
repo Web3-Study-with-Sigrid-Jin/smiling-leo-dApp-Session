@@ -13,8 +13,8 @@ npx hardhat node
 node scripts/sample-script.js
 npx hardhat help
 ```
-DRAFTJS_BLOCK_KEY:932so
-#Deploy to Testnet
+
+# Deploy to Testnet
 -Kovan
 ![image](https://user-images.githubusercontent.com/79504024/169882899-6282cc93-1a7d-4897-8292-0b6a55f3eadc.png)
 ![image](https://user-images.githubusercontent.com/79504024/169882195-db6697d6-7097-473b-b3bc-a55868113cc2.png)
