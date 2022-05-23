@@ -55,7 +55,7 @@ describe("Greeter", function () {
   it('Should return all accounts', async() => {
     const accounts = await hre.ethers.getSigners();
     for (const account of accounts) {
-      // console.log("I am address >>>>>>>>>.", account.address);
+      console.log("I am >>>>", account.address);
     }
   })
 
