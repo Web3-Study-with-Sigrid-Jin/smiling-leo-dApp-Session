@@ -1,5 +1,7 @@
 # 2주차 미션: 간단 Token Transfer 사이트 구현하기
 
+![transfer](https://user-images.githubusercontent.com/41055141/170207975-fb415ca0-b316-4792-9f06-1dc1ee2a7161.png)
+
 ## 미션 설명
 
 * 프론트엔드에서 `Transfer` 버튼과 `burn` 버튼을 누르면, 스마트 컨트랙트에서 `Transfer` 과 `burn` 메소드가 실행되는 트랜잭션이 실행되는 간단한 웹 사이트를 구현한다.
