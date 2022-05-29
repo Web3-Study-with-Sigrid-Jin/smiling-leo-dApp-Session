@@ -45,9 +45,7 @@ const App=()=>{
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
 
-      let chainId = await ethereum.request({ method: 'eth_chainId' });
-      alert("Connected to chain " + chainId);
-
+      checkChainId();
       // String, hex code of the chainId of the Rinkebey test network
       // Setup listener! This is for the case where a user comes to our site
       // and connected their wallet for the first time.
@@ -55,10 +53,32 @@ const App=()=>{
       console.log(error)
     }
   }
+  /// checkChainID
+  const checkChainId= async ()=>{
+    try {
+      const { ethereum } = window;
 
+      if (!ethereum) {
+        alert("Get MetaMask!");
+        return;
+      }
+
+      var chainId = await ethereum.request({ method: 'eth_chainId' });
+      alert("Connected to chain " + chainId);
+      const rinkebyChainId = "0x4";
+      if (chainId !== rinkebyChainId) {
+        alert("You are not connected to the Rinkeby Network!");
+      }
+      // String, hex code of the chainId of the Rinkebey test network
+      // Setup listener! This is for the case where a user comes to our site
+      // and connected their wallet for the first time.
+    } catch (error) {
+      console.log(error)
+    }
+  }
   
   const askContractToTransfer = async () => {
-    alert("2끝")
+    checkChainId();
   }
   
   useEffect(() => {
