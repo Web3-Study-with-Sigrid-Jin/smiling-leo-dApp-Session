@@ -1,0 +1,17 @@
+hardhat.config.js
+
+module.exports = {
+  solidity: "0.8.0",
+  networks: {
+    rinkeby: {
+      url: `${ALLTHATNODE_API_URL}`,
+      accounts: [`${PRIVATE_KEY}`]
+    }
+    baobab: {
+      url: `${ALLTHATNODE_API_URL}`,
+      accounts: [`${PRIVATE_KEY}`]
+    }	
+  }
+};
+export ALLTHATNODE_API_URL= '~'
+baobab
