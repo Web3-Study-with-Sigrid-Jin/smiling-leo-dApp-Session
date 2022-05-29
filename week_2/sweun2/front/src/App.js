@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import ATNToken from './utils/ATNToken.json';
 
-const CONTRACT_ADDRESS ="0x56f3532eDEeb1D88757E81CB7E8030b278381d7b";
+const CONTRACT_ADDRESS ="0x009B3DB262A9a02Cd1A19B48C1f2823A4De6bDff";
 
 const App=()=>{
     const [currentAccount, setCurrentAccount] = useState("");
@@ -97,10 +97,10 @@ const App=()=>{
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, ATNToken.abi, signer);
 
-        console.log("Going to pop wallet now to pay gas...")
+        alert("Going to pop wallet now to pay gas...")
         let txn = await connectedContract.transfer(to, amount);
 
-        console.log("Mining...please wait.")
+        alert("Mining...please wait.")
         await txn.wait();
         console.log(txn);
         console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${txn.hash}`);
