@@ -86,6 +86,7 @@ const App=()=>{
   
   const askContractToTransfer = async () => {
     checkChainId();
+    setupEventListener()
     const to = toAddress;
     const amount = ethers.utils.parseEther((toAmount).toString());
     alert("amount >>>>>>>> "+ amount)
@@ -113,6 +114,33 @@ const App=()=>{
     }
   }
   
+  const setupEventListener = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        // Same stuff again
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, ATNToken.abi, signer);
+
+        connectedContract.on("Transfer", (from, amount) => {
+          console.log(from, amount);
+          alert(`토큰이 전송 (transfer) 되었어요! ${from}, 에서 ${amount} 만큼 보냈어요!`)
+        });
+
+        alert("Setup event listener!")
+
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+
   useEffect(() => {
     checkIfWalletIsConnected();
   })
