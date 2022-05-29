@@ -6,7 +6,14 @@ import ATNToken from './utils/ATNToken.json';
 const CONTRACT_ADDRESS ="0x56f3532eDEeb1D88757E81CB7E8030b278381d7b";
 
 const App=()=>{
-  const [currentAccount, setCurrentAccount] = useState("");
+    const [currentAccount, setCurrentAccount] = useState("");
+    const [toAddress, setToAddress] = useState("");
+    const [toAmount, setToAmount] = useState("");
+
+
+
+
+
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
 
@@ -64,7 +71,7 @@ const App=()=>{
       }
 
       var chainId = await ethereum.request({ method: 'eth_chainId' });
-      alert("Connected to chain " + chainId);
+      console.log("Connected to chain " + chainId);
       const rinkebyChainId = "0x4";
       if (chainId !== rinkebyChainId) {
         alert("You are not connected to the Rinkeby Network!");
@@ -79,6 +86,31 @@ const App=()=>{
   
   const askContractToTransfer = async () => {
     checkChainId();
+    const to = toAddress;
+    const amount = ethers.utils.parseEther((toAmount).toString());
+    alert("amount >>>>>>>> "+ amount)
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, ATNToken.abi, signer);
+
+        console.log("Going to pop wallet now to pay gas...")
+        let txn = await connectedContract.transfer(to, amount);
+
+        console.log("Mining...please wait.")
+        await txn.wait();
+        console.log(txn);
+        console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${txn.hash}`);
+
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
   
   useEffect(() => {
@@ -93,7 +125,8 @@ const App=()=>{
   
   const TransferUI = () => (
     <div>
-          
+          <input type="text" value={toAddress} placeholder='where to send' onChange={e => { setToAddress(e.target.value) }}></input>
+          <input type="text" value={toAmount} placeholder='how much to send' onChange={(e) => setToAmount(e.target.value)}></input>
           <button onClick={askContractToTransfer} className="cta-button connect-wallet-button">
             Transfer
           </button>
