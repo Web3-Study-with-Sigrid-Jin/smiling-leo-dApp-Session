@@ -8,7 +8,8 @@ const TWITTER_HANDLE = 'BeModestDotEth';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 // Etherscan Verified contract address
-const CONTRACT_ADDRESS = "0x9D8FC64b9A21a0DB86f2ed8f21B20785873DA241";
+// Redeploy with burnable token
+const CONTRACT_ADDRESS = "0x76A11FbceB5661B5DD6CA988e891Ae6Bdbc9EFA5";
 
 const App = () => {
 
@@ -99,7 +100,7 @@ const App = () => {
                 // Connect to contract
                 const provider = new ethers.providers.Web3Provider(ethereum);
                 const signer = provider.getSigner();
-                const myContract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+                const myContract = new ethers.Contract(CONTRACT_ADDRESS, abi.abi, signer);
 
                 // Setup listener
                 myContract.on('Transfer', (from, to, amount) => {
@@ -124,7 +125,7 @@ const App = () => {
         const to = toAddress;
         const amount = ethers.utils.parseEther((toAmount).toString());    
         console.log("to:", to, " | amount >>>>>>>> ", amount)
-        console.log(abi)
+        console.log(abi.abi)
 
         try {
             const { ethereum } = window;
@@ -133,7 +134,7 @@ const App = () => {
                 // Connect to contract
                 const provider = new ethers.providers.Web3Provider(ethereum);
                 const signer = provider.getSigner();
-                const myContract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+                const myContract = new ethers.Contract(CONTRACT_ADDRESS, abi.abi, signer);
 
                 console.log('popup window')
 
@@ -155,12 +156,54 @@ const App = () => {
         catch (err) {
             console.log(err);
         }
+    }
 
+    // Step 7: Execute ERC20 burn method upon button click
+    const contractBurn = async () => {
+        // arguments
+        const amount = ethers.utils.parseEther((toAmount).toString());    
+        console.log("to: zero address", " | amount >>>>>>>> ", amount)
+        // ABI를 이더스캔에서 긁어오면 바로 사용할 수 있지만
+        // Hardhat artifacts에서 긁어오면 object 형식으로 저장되기 때문에
+        // ABI 키를 지정해줘야 한다.
+        console.log(abi.abi)
+
+        try {
+            const { ethereum } = window;
+
+            if (ethereum) {
+                // Connect to contract
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const myContract = new ethers.Contract(CONTRACT_ADDRESS, abi.abi, signer);
+
+                console.log('popup window')
+
+                // Tx가 완전히 채굴되기까지 2번의 await을 거친다
+                let tx = await myContract.burn(amount)
+                console.log('wait while tx is mined...');
+
+                await tx.wait();
+
+                if (tx) {
+                    console.log(tx);
+                    console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${tx.hash}`);
+                }
+
+                // burn은 Transfer 이벤트를 transfer 함수와 공유한다.
+            }
+            else {
+                alert('Get Metamask!');
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 
     useEffect(() => {
         checkIfWalletIsConnected();
-    }, [currentAccount]);
+    });
     
     const renderNotConnectedContainer = () => (
         <button onClick={connectWallet} className="cta-button connect-wallet-button">
@@ -178,7 +221,7 @@ const App = () => {
                     <button onClick={contractTransfer} className="cta-button connect-wallet-button">
                         Transfer
                     </button>
-                    <button onClick={''} className="cta-button connect-wallet-button">
+                    <button onClick={contractBurn} className="cta-button connect-wallet-button">
                         Burn
                     </button>
             </div>
