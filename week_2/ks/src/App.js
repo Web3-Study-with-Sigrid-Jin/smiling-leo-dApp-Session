@@ -81,11 +81,42 @@ const App = () => {
             // State로 networkid를 받아 정확한 네트워크 연결이 안되어 있으면 아예 창을 안 뜨게 만들 수도 있을것
             // 만약 rinkeby 네트워크가 없다면 자동으로 PRC 추가를 해 주는 사이트도 있엇던데
             // 그거는 어떻게 구현하는걸까?
+
+            // 지갑을 처음으로 연결할 때 이벤트 listener를 연결시킨다.
+            setupEventListener()
         }
         catch(err) {
             console.log(err);
         }
     } 
+
+    // Step 6: Set up eventListener to fetch emit event after transfer
+    const setupEventListener = async () => {
+        try {
+            const { ethereum } = window;
+
+            if (ethereum) {
+                // Connect to contract
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const myContract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+
+                // Setup listener
+                myContract.on('Transfer', (from, to, amount) => {
+                    console.log(from, to, amount);
+                    alert(`Successfully Transferred from ${from} to ${to} with amount ${amount}!`);
+                })
+
+                console.log("Event listener initialized");
+            }
+            else {
+                alert('get metamask!');
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
 
     // Step 5: Execute ERC20 transfer method upon button click
     const contractTransfer = async () => {
