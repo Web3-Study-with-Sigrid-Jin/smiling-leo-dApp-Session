@@ -17,8 +17,7 @@ async function main() {
   const receiverAddresss = '0xB37FeBBb8eBd813f7eBFfa1c2c3D4C312f3c8e3D';
   const accounts = [ownerAddresss, receiverAddresss];
   
-  // ethers.utils.parseEther(1000000000).toNumber()
-  const initSupply = ethers.utils.parseEther('1000000000');
+  const initSupply = 1000;
   
   // Deploy Contract
   const MyERC20 = await hre.ethers.getContractFactory("MyERC20");
