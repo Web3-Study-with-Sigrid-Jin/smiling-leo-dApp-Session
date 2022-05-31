@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-etherscan");
 
 require("dotenv").config();
 
@@ -28,12 +29,22 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
       gasPrice: 8000000000,
       gasMultiplier:1
     },
+    ropsten: {
+      url: `${process.env.ALLTHATNODE_ROPSTEN_URL}`,
+      accounts: [`${process.env.PRIVATE_KEY_ROPSTEN}`],
+      gas: 2100000,
+      gasPrice: 8000000000,
+      gasMultiplier:1
+    },
     baobab: {
       url: `${process.env.ALLTHATNODE_BAOBAB_URL}`,
       accounts: [`${process.env.PRIVATE_KEY_BAOBAB}`],
       chainId: 1001,
       gas: 15000000,
       gasPrice: 250000000000
-    }
-  }  
+    },
+  },
+  etherscan: {
+    apiKey: `${process.env.ETHERSCAN_API_KEY}`
+  }
 };

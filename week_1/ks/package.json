@@ -11,13 +11,15 @@
     "deploy-erc20-kovan": "npx hardhat run ./scripts/myerc20.js --network kovan",
     "deploy-erc20-ropsten": "npx hardhat run ./scripts/myerc20.js --network ropsten",
     "deploy-erc20-baobab": "npx hardhat run ./scripts/myerc20.js --network baobab",
-    "test-erc20": "npx hardhat test ./test/myerc20-test.js"
+    "test-erc20": "npx hardhat test ./test/myerc20-test.js",
+    "verify": "npx hardhat verify 0x9D8FC64b9A21a0DB86f2ed8f21B20785873DA241 1000000000 --network rinkeby"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.6",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@nomiclabs/hardhat-etherscan": "^3.0.4",
     "chai": "^4.3.6",
     "ethereum-waffle": "^3.4.4",
     "ethers": "^5.6.7",
