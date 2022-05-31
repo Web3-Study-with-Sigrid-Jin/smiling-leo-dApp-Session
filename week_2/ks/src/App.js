@@ -81,7 +81,7 @@ const App = () => {
 
   useEffect(() => {
     checkIfWalletIsConnected();
-  });
+  }, [currentAccount]);
   
   const renderNotConnectedContainer = () => (
     <button onClick={connectWallet} className="cta-button connect-wallet-button">
@@ -92,8 +92,9 @@ const App = () => {
   const TransferUI = () => (
     <div>
         {/* State 이용해서 입력하는 값을 저장 */}
-          <input type="text" value={toAddress} placeholder='where to send' onChange={e => { setToAddress(e.target.value) }}></input>
-          <input type="text" value={toAmount} placeholder='how much to send' onChange={(e) => setToAmount(e.target.value)}></input>
+        {/* Step 4: Inputs for ethereum address & amount */}
+        <input type="text" value={toAddress} placeholder='where to send' onChange={e => {setToAddress(e.target.value);}}></input>
+          <input type="text" value={toAmount} placeholder='how much to send' onChange={e => {setToAmount(e.target.value);}}></input>
           <div>
                 <button onClick={''} className="cta-button connect-wallet-button">
                     Transfer
@@ -104,6 +105,14 @@ const App = () => {
           </div>
     </div>
   )
+
+  // Amount를 바꾸고 바로 transfer를 누르면 그 수치기 제대로 반영이 되지 않을 수도 있으니까
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log('timee is working...')
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [toAmount])
 
   return (
     <div className="App">
