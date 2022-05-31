@@ -1,4 +1,5 @@
 import './styles/App.css';
+import abi from './utils/MTTT-abi.json'
 import twitterLogo from './assets/twitter-logo.svg';
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
@@ -52,90 +53,137 @@ const App = () => {
     const connectWallet = async () => {
         console.log('--------------\n', 'step 2')
 
-        if (!ethereum) {
-            alert("Get MetaMask!");
-            return;
-        }
+        try {
+            // 이게 있어에 메타마스크가 없을 때 에러를 띄울 수 있다.
+            const { ethereum } = window;
+            if (!ethereum) {
+                alert("Get MetaMask!");
+                return;
+            }    
 
-        // 메타마스크가 지갑에 있는 계정들을 UI로 보여준다.
-        // 유저가 선택한 지갑들을 array로 가져온다
-        // 몇 개를 체크하든, 현재 사용중인 지갑만 length 1인 array로 가져온다
-        const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-        console.log("Connected", accounts[0]);
-        // State와 Effect 작업을 해 줘야 연결하자마자 화면이 바뀐다
-        setCurrentAccount(accounts[0]);
-  
-        // CahinID를 16진수 string으로 가져온다
-        let chainId = await ethereum.request({ method: 'eth_chainId' });
-        console.log("Connected to chain " + chainId);
+            // 메타마스크가 지갑에 있는 계정들을 UI로 보여준다.
+            // 유저가 선택한 지갑들을 array로 가져온다
+            // 몇 개를 체크하든, 현재 사용중인 지갑만 length 1인 array로 가져온다
+            const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+            console.log("Connected", accounts[0]);
+            // State와 Effect 작업을 해 줘야 연결하자마자 화면이 바뀐다
+            setCurrentAccount(accounts[0]);
 
-        // Step 3: If not connected to Rinkeby Network, display message to request network change.
-        const rinkebyChainId = "0x4";
-        if (chainId !== rinkebyChainId) {
-            alert("Change your network to Rinkeby!");
+            // CahinID를 16진수 string으로 가져온다
+            let chainId = await ethereum.request({ method: 'eth_chainId' });
+            console.log("Connected to chain " + chainId);
+
+            // Step 3: If not connected to Rinkeby Network, display message to request network change.
+            const rinkebyChainId = "0x4";
+            if (chainId !== rinkebyChainId) {
+                alert("Change your network to Rinkeby!");
+            }
+            // State로 networkid를 받아 정확한 네트워크 연결이 안되어 있으면 아예 창을 안 뜨게 만들 수도 있을것
+            // 만약 rinkeby 네트워크가 없다면 자동으로 PRC 추가를 해 주는 사이트도 있엇던데
+            // 그거는 어떻게 구현하는걸까?
         }
-        // State로 networkid를 받아 정확한 네트워크 연결이 안되어 있으면 아예 창을 안 뜨게 만들 수도 있을것
-        // 만약 rinkeby 네트워크가 없다면 자동으로 PRC 추가를 해 주는 사이트도 있엇던데
-        // 그거는 어떻게 구현하는걸까?
+        catch(err) {
+            console.log(err);
+        }
     } 
 
-  useEffect(() => {
-    checkIfWalletIsConnected();
-  }, [currentAccount]);
-  
-  const renderNotConnectedContainer = () => (
-    <button onClick={connectWallet} className="cta-button connect-wallet-button">
-      Connect to Wallet
-    </button>
-  );
+    // Step 5: Execute ERC20 transfer method upon button click
+    const contractTransfer = async () => {
+        // arguments
+        const to = toAddress;
+        const amount = ethers.utils.parseEther((toAmount).toString());    
+        console.log("to:", to, " | amount >>>>>>>> ", amount)
+        console.log(abi)
 
-  const TransferUI = () => (
-    <div>
-        {/* State 이용해서 입력하는 값을 저장 */}
-        {/* Step 4: Inputs for ethereum address & amount */}
-        <input type="text" value={toAddress} placeholder='where to send' onChange={e => {setToAddress(e.target.value);}}></input>
-          <input type="text" value={toAmount} placeholder='how much to send' onChange={e => {setToAmount(e.target.value);}}></input>
-          <div>
-                <button onClick={''} className="cta-button connect-wallet-button">
-                    Transfer
-                </button>
-                <button onClick={''} className="cta-button connect-wallet-button">
-                    Burn
-                </button>
-          </div>
-    </div>
-  )
+        try {
+            const { ethereum } = window;
 
-  // Amount를 바꾸고 바로 transfer를 누르면 그 수치기 제대로 반영이 되지 않을 수도 있으니까
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('timee is working...')
-    }, 500)
-    return () => clearTimeout(timer)
-  }, [toAmount])
+            if (ethereum) {
+                // Connect to contract
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const myContract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 
-  return (
-    <div className="App">
-      <div className="container">
-        <div className="header-container">
-          <p className="header gradient-text">Transfer MTTT!</p>
-          <p className="sub-text">
-          Long Live Smiling Leo, Long Live DSRV!
-          </p>
-          {currentAccount === "" ? renderNotConnectedContainer() : TransferUI()}
-    <div className="footer-container">
+                console.log('popup window')
+
+                // Tx가 완전히 채굴되기까지 2번의 await을 거친다
+                let tx = await myContract.transfer(to, amount)
+                console.log('wait while tx is mined...');
+
+                await tx.wait();
+
+                if (tx) {
+                    console.log(tx);
+                    console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${tx.hash}`);
+                }
+            }
+            else {
+                alert('Get Metamask!');
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+
+    }
+
+    useEffect(() => {
+        checkIfWalletIsConnected();
+    }, [currentAccount]);
+    
+    const renderNotConnectedContainer = () => (
+        <button onClick={connectWallet} className="cta-button connect-wallet-button">
+        Connect to Wallet
+        </button>
+    );
+
+    const TransferUI = () => (
+        <div>
+            {/* State 이용해서 입력하는 값을 저장 */}
+            {/* Step 4: Inputs for ethereum address & amount */}
+            <input type="text" value={toAddress} placeholder='where to send' onChange={e => {setToAddress(e.target.value);}}></input>
+            <input type="text" value={toAmount} placeholder='how much to send' onChange={e => {setToAmount(e.target.value);}}></input>
+            <div>
+                    <button onClick={contractTransfer} className="cta-button connect-wallet-button">
+                        Transfer
+                    </button>
+                    <button onClick={''} className="cta-button connect-wallet-button">
+                        Burn
+                    </button>
+            </div>
         </div>
-          <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
-          <a
-            className="footer-text"
-            href={TWITTER_LINK}
-            target="_blank"
-            rel="noreferrer"
-          >{`built on @${TWITTER_HANDLE}`}</a>
+    )
+
+    // Amount를 바꾸고 바로 transfer를 누르면 그 수치기 제대로 반영이 되지 않을 수도 있으니까
+    useEffect(() => {
+        const timer = setTimeout(() => {
+        console.log('timee is working...')
+        }, 500)
+        return () => clearTimeout(timer)
+    }, [toAmount])
+
+    return (
+        <div className="App">
+        <div className="container">
+            <div className="header-container">
+            <p className="header gradient-text">Transfer MTTT!</p>
+            <p className="sub-text">
+            Long Live Smiling Leo, Long Live DSRV!
+            </p>
+            {currentAccount === "" ? renderNotConnectedContainer() : TransferUI()}
+        <div className="footer-container">
+            </div>
+            <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
+            <a
+                className="footer-text"
+                href={TWITTER_LINK}
+                target="_blank"
+                rel="noreferrer"
+            >{`built on @${TWITTER_HANDLE}`}</a>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default App;
