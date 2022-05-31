@@ -68,6 +68,15 @@ const App = () => {
         // CahinID를 16진수 string으로 가져온다
         let chainId = await ethereum.request({ method: 'eth_chainId' });
         console.log("Connected to chain " + chainId);
+
+        // Step 3: If not connected to Rinkeby Network, display message to request network change.
+        const rinkebyChainId = "0x4";
+        if (chainId !== rinkebyChainId) {
+            alert("Change your network to Rinkeby!");
+        }
+        // State로 networkid를 받아 정확한 네트워크 연결이 안되어 있으면 아예 창을 안 뜨게 만들 수도 있을것
+        // 만약 rinkeby 네트워크가 없다면 자동으로 PRC 추가를 해 주는 사이트도 있엇던데
+        // 그거는 어떻게 구현하는걸까?
     } 
 
   useEffect(() => {
@@ -86,9 +95,12 @@ const App = () => {
           <input type="text" value={toAddress} placeholder='where to send' onChange={e => { setToAddress(e.target.value) }}></input>
           <input type="text" value={toAmount} placeholder='how much to send' onChange={(e) => setToAmount(e.target.value)}></input>
           <div>
-            <button onClick={''} className="cta-button connect-wallet-button">
-                Transfer
-            </button>
+                <button onClick={''} className="cta-button connect-wallet-button">
+                    Transfer
+                </button>
+                <button onClick={''} className="cta-button connect-wallet-button">
+                    Burn
+                </button>
           </div>
     </div>
   )
