@@ -31,9 +31,9 @@ module.exports = {
         mnemonic: MNEMONIC
       },
       //accounts: [`${RINKEBY_PRIVATE_KEY}`],
-      gas: 2100000,
-      gasPrice: 8000000000,
-      saveDeployments: true
+      // gas: 2100000,
+      // gasPrice: 8000000000,
+      // saveDeployments: true
     },
     
     baobab : {
