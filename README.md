@@ -28,11 +28,6 @@
 
 * 0주차 5월 11일: 오리엔테이션
 * 1주차 5월 18일: Solidity 소개 (과제: Counter Example)
-* 2주차 5월 25일: Anchor 소개 (과제: Counter Example)
-* 3주차 6월 1일: ERC20 토큰 배포하기 (과제: Token Vesting dApp)
-* 4주차 6월 8일: SPL Fungible 토큰 배포하기 (과제: Token Vesting dApp에 SPL 지원 추가하기)
-* 4주차 6월 15일: ERC721 토큰 배포하기 (과제: NFT-based Naming Service)
-* 5주차: 기말고사 휴강
-* 6주차 6월 29일: SPL NonFungible 토큰 배포하기 (과제: NFT-based Naming Service에 SPL 버전 만들기)
-* 7 ~ 8주차: Uniswap 만들어보기 (Single Token, Dual Token)
-* 이후: 브릿지 제작, ZK dApp 제작 등
+* 2주차 5월 25일: ERC20 토큰 배포하기 (과제: Simple Vesting Example)
+* 3주차 6월 8일: ERC721 토큰 배포하기 (과제: Token Vesting dApp)
+* 4주차 6월 22일: ENS를 활용한 토큰 컨트랙트 배포하기
