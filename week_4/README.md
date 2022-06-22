@@ -14,6 +14,7 @@
 ### 1단계
 
 * 지난 3주차에 올렸던 컨트랙트 요구사항을 구현하되, IPFS로 메타데이터를 업로드하도록 리팩토링한다.
+* 3주차 자료: https://github.com/Web3-Study-with-Sigrid-Jin/smiling-leo-dApp-Session/blob/main/week_3/presentation/Week%203.pdf
 
 ### 2단계
 
