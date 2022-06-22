@@ -1,0 +1,30 @@
+{
+  "name": "ks",
+  "version": "1.0.0",
+  "description": "week-1",
+  "main": "index.js",
+  "scripts": {
+    "deploy-rinkeby": "npx hardhat run ./scripts/sample-script.js --network rinkeby",
+    "deploy-baobab": "npx hardhat run ./scripts/sample-script.js --network baobab",
+    "test": "npx hardhat test ./test/sample-test.js",
+    "deploy-erc20-rinkeby": "npx hardhat run ./scripts/myerc20.js --network rinkeby",
+    "deploy-erc20-kovan": "npx hardhat run ./scripts/myerc20.js --network kovan",
+    "deploy-erc20-ropsten": "npx hardhat run ./scripts/myerc20.js --network ropsten",
+    "deploy-erc20-baobab": "npx hardhat run ./scripts/myerc20.js --network baobab",
+    "test-erc20": "npx hardhat test ./test/myerc20-test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.6",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^3.4.4",
+    "ethers": "^5.6.7",
+    "hardhat": "^2.9.6"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.6.0",
+    "dotenv": "^16.0.1"
+  }
+}
